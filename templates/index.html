@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Leaderboards</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Retrieve leaderboard data from the backend
+            $.getJSON('/leaderboards', function (data) {
+                // Iterate over the data and populate the leaderboards
+                for (let i = 0; i < data.length; i++) {
+                    let leaderboard = data[i];
+                    let leaderboardTable = $(`#leaderboard${i + 1}`);
+                    leaderboardTable.empty();
+                    $.each(leaderboard, function (index, member) {
+                        let row = $('<tr>');
+                        row.append($('<td>').text(index + 1));
+                        row.append($('<td>').text(member[0]));  // Name
+                        row.append($('<td>').text(member[1]));  // Points
+                        leaderboardTable.append(row);
+                    });
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+    <h1>Leaderboards</h1>
+
+    <h2>Leaderboard 1</h2>
+    <table id="leaderboard1">
+        <tr>
+            <th>Rank</th>
+            <th>Name</th>
+            <th>Points</th>
+        </tr>
+    </table>
+
+    <!-- Add similar code for Leaderboards 2-10 -->
+
+    <form id="add-member-form">
+        <h3>Add Member</h3>
+        <label for="leaderboard">Leaderboard:</label>
+        <input type="number" name="leaderboard" min="1" max="10" required>
+        <br>
+        <label for="name">Name:</label>
+        <input type="text" name="name" required>
+        <br>
+        <label for="points">Points:</label>
+        <input type="number" name="points" required>
+        <br>
+        <button type="submit">Add Member</button>
+    </form>
+</body>
+</html>

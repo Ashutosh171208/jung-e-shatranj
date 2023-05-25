@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Member</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#leaderboard').on('change', function() {
+                var leaderboard = $(this).val();
+
+                $.ajax({
+                    url: '/get_members',
+                    type: 'POST',
+                    data: {
+                        leaderboard: leaderboard
+                    },
+                    success: function(response) {
+                        var members = JSON.parse(response);
+
+                        // Clear previous options
+                        $('#name').empty();
+
+                        // Populate member dropdown
+                        for (var i = 0; i < members.length; i++) {
+                            $('#name').append($('<option>').text(members[i]).attr('value', members[i]));
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+    <h1>Add Member</h1>
+
+    <form method="POST" action="{{ url_for('add_member') }}">
+        <label for="leaderboard">Leaderboard:</label>
+        <input type="number" name="leaderboard" min="1" max="10" required>
+        <br>
+        <label for="name">Name:</label>
+        <input type="text" name="name" required>
+        <br>
+        <label for="points">Points:</label>
+        <input type="number" name="points" required>
+        <br>
+        <button type="submit">Add Member</button>
+    </form>
+
+    <h2>Modify Member Points</h2>
+    <form method="POST" action="{{ url_for('modify_points') }}">
+        <label for="leaderboard">Leaderboard:</label>
+        <select id="leaderboard" name="leaderboard" required>
+            {% for i in range(1, 11) %}
+                <option value="{{ i }}">{{ i }}</option>
+            {% endfor %}
+        </select>
+        <br>
+        <label for="name">Name:</label>
+        <select id="name" name="name" required></select>
+        <br>
+        <label for="points">Points:</label>
+        <input type="number" name="points" required>
+        <br>
+        <button type="submit">Modify Points</button>
+    </form>
+
+    <h2>Delete Member</h2>
+    <form method="POST" action="{{ url_for('delete_member') }}">
+        <label for="leaderboard">Leaderboard:</label>
+        <input type="number" name="leaderboard" min="1" max="10" required>
+        <br>
+        <label for="name">Name:</label>
+        <input type="text" name="name" required>
+        <br>
+        <button type="submit">Delete Member</button>
+    </form>
+</body>
+</html>
